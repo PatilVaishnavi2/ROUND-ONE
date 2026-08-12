@@ -1,4 +1,4 @@
-const CACHE_NAME = "round-one-v5-attractive";
+const CACHE_NAME = "round-one-final-v6";
 const ASSETS = [
   "./",
   "./index.html",

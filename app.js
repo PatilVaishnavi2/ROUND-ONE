@@ -528,7 +528,7 @@ const V5_ROUTINE=[
 {id:"daily-review",time:"22:20",title:"ROUND ONE Daily Review",meta:"Check tasks • water • study • training"},
 {id:"sleep",time:"22:30",title:"Sleep",meta:"Target bedtime"}];
 const V5K="roundOneV5Routine",V5C="roundOneV5CustomTasks";
-const v5day=()=>new Date().toISOString().slice(0,10);
+const v5day=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
 const v5load=()=>{try{return JSON.parse(localStorage.getItem(V5K)||"{}")}catch(e){return{}}};
 const v5save=x=>localStorage.setItem(V5K,JSON.stringify(x));
 const v5custom=()=>{try{return JSON.parse(localStorage.getItem(V5C)||"[]")}catch(e){return[]}};
@@ -562,3 +562,232 @@ v5render();
   updateHero();
   setInterval(updateHero,1000);
 })();
+
+/* ==========================================================
+   ROUND ONE FINAL v6
+   Weekly analytics, local-date correctness, smart reminder UI,
+   notification permission, and final dashboard.
+========================================================== */
+const V6_LOCAL_KEY = "roundOneFinalV6";
+const V6_REMINDERS_KEY = "roundOneFinalV6Reminders";
+
+function localDayKey(date = new Date()){
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+}
+function v6LoadReminders(){
+  try {
+    const saved = JSON.parse(localStorage.getItem(V6_REMINDERS_KEY) || "null");
+    if (saved && typeof saved === "object") return saved;
+  } catch {}
+  return {};
+}
+function v6SaveReminders(x){ localStorage.setItem(V6_REMINDERS_KEY, JSON.stringify(x)); }
+
+function v6Schedule(){
+  return [
+    ["06:00","Wake Up","Start the day • no social media"],
+    ["06:15","Morning Water","350–400 ml"],
+    ["06:30","Morning Routine","Kadipatta • Moringa • Bhringraj • Isabgol • freshen up"],
+    ["07:15","Deep Study #1","50 min focused study"],
+    ["08:15","Breakfast","Breakfast + water"],
+    ["08:45","Deep Study #2","50 min focused study"],
+    ["10:00","College","College / commute block"],
+    ["13:00","Lunch","Proper meal + short break"],
+    ["16:30","Water Check","Hydration check"],
+    ["19:00","Home & Recovery","Change • snack • hydrate • decompress"],
+    ["19:30","Evening Study","50 min focused study"],
+    ["20:30","Training Preparation","Light snack • hydrate • change"],
+    ["21:00","Boxing","60 min target"],
+    ["22:00","Cool Down & Wind Down","Shower • skincare • prepare tomorrow"],
+    ["22:20","ROUND ONE Daily Review","Check tasks • water • study • training"],
+    ["22:30","Sleep","Target bedtime"]
+  ];
+}
+
+function v6ReminderRender(){
+  const host = document.getElementById("reminderList");
+  if(!host) return;
+  const saved = v6LoadReminders();
+  const defaults = v6Schedule();
+  host.innerHTML = defaults.map(([time,title,meta],i)=>{
+    const id = "v6-" + i;
+    const on = saved[id] !== false;
+    return `<div class="reminder-row">
+      <div class="reminder-time">${time}</div>
+      <div><div class="reminder-title">${v6Escape(title)}</div><span class="reminder-meta">${v6Escape(meta)}</span></div>
+      <button type="button" class="reminder-toggle ${on?"on":""}" data-reminder="${id}" aria-label="Toggle ${v6Escape(title)}" aria-pressed="${on}"></button>
+    </div>`;
+  }).join("");
+  host.querySelectorAll("[data-reminder]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const s=v6LoadReminders();
+      const id=btn.dataset.reminder;
+      s[id] = s[id] === false;
+      v6SaveReminders(s);
+      v6ReminderRender();
+      showToast(s[id] ? "Reminder turned on" : "Reminder turned off");
+    });
+  });
+}
+function v6Escape(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+
+function v6GetDay(date){
+  const key = `routine:${localDayKey(date)}`;
+  try {
+    const d = JSON.parse(localStorage.getItem(key) || "null");
+    return d || {completed:{},water:0,extra:[]};
+  } catch { return {completed:{},water:0,extra:[]}; }
+}
+function v6GetPersonalDay(date){
+  const key = localDayKey(date);
+  try {
+    const s = JSON.parse(localStorage.getItem("roundOneV5Routine") || "{}");
+    const completed = Array.isArray(s[key]) ? s[key].length : 0;
+    return completed;
+  } catch { return 0; }
+}
+function v6DayMetrics(date){
+  const d = v6GetDay(date);
+  const base = BASE_SCHEDULE.length + (Array.isArray(d.extra)?d.extra.length:0);
+  const done = Object.values(d.completed||{}).filter(Boolean).length;
+  const personal = v6GetPersonalDay(date);
+  const routineTotal = 16;
+  const routineDone = Math.min(personal, routineTotal);
+  const completion = Math.min(100, Math.round(((done + routineDone) / Math.max(1,base+routineTotal)) * 100));
+  const water = Number(d.water||0);
+  const study = Object.keys(d.completed||{}).filter(id => id.includes("study")).length;
+  const boxing = Object.keys(d.completed||{}).filter(id => id.includes("boxing")).length;
+  return {completion,water,study,boxing};
+}
+function v6CurrentStreak(){
+  let streak=0;
+  const d=new Date();
+  for(let i=0;i<365;i++){
+    const m=v6DayMetrics(d);
+    if(m.completion<70 || m.water<WATER_GOAL_ML) break;
+    streak++;
+    d.setDate(d.getDate()-1);
+  }
+  return streak;
+}
+function v6WeekRender(){
+  const scoreEl=document.getElementById("weekScore");
+  const streakEl=document.getElementById("weekStreak");
+  const waterEl=document.getElementById("weekWater");
+  const studyEl=document.getElementById("weekStudy");
+  const boxingEl=document.getElementById("weekBoxing");
+  const tasksEl=document.getElementById("weekTasks");
+  const chart=document.getElementById("weekChart");
+  if(!scoreEl || !chart) return;
+
+  let totalScore=0, water=0, study=0, boxing=0;
+  const days=[];
+  const now=new Date();
+
+  for(let i=6;i>=0;i--){
+    const d=new Date(now);
+    d.setHours(0,0,0,0);
+    d.setDate(now.getDate()-i);
+    const m=v6DayMetrics(d);
+    days.push({d,m});
+    totalScore+=m.completion;
+    water+=m.water;
+    study+=m.study;
+    boxing+=m.boxing;
+  }
+
+  const score=Math.round(totalScore/7);
+  scoreEl.textContent=score+"%";
+  streakEl.textContent=v6CurrentStreak()+" days";
+  waterEl.textContent=(water/1000).toFixed(1)+" L";
+  studyEl.textContent=study+" blocks";
+  boxingEl.textContent=boxing+" sessions";
+  tasksEl.textContent=score+"%";
+
+  const msg = score>=85 ? "Excellent consistency. Keep the momentum." :
+              score>=70 ? "Strong week. One more push." :
+              score>=50 ? "Good start. Build consistency." :
+              "Reset, refocus, go again.";
+  const msgEl=document.getElementById("weekMessage");
+  if(msgEl) msgEl.textContent=msg;
+
+  chart.innerHTML=days.map(({d,m})=>{
+    const label=d.toLocaleDateString(undefined,{weekday:"short"}).slice(0,2);
+    return `<div class="day-bar" title="${d.toLocaleDateString()} — ${m.completion}%">
+      <div class="day-bar-track"><div class="day-bar-fill" style="height:${Math.max(3,m.completion)}%"></div></div>
+      <b>${m.completion}%</b><small>${label}</small>
+    </div>`;
+  }).join("");
+}
+
+function v6NotificationStatus(){
+  const box=document.getElementById("notificationStatus");
+  const btn=document.getElementById("enableNotificationsFinal");
+  if(!box) return;
+  let text="Notifications are not supported in this browser.";
+  let cls="warn";
+  if("Notification" in window){
+    if(Notification.permission==="granted"){
+      text="iPhone notifications are allowed for ROUND ONE.";
+      cls="ok";
+      if(btn) btn.textContent="Notifications Enabled";
+    }else if(Notification.permission==="denied"){
+      text="Notifications are blocked. Enable them in iPhone Settings → Notifications → ROUND ONE.";
+      cls="warn";
+      if(btn) btn.textContent="Open Notification Help";
+    }else{
+      text="Notifications are ready — tap the button to allow them.";
+      cls="";
+      if(btn) btn.textContent="Enable iPhone Notifications";
+    }
+  }
+  box.innerHTML=`<span class="status-dot ${cls}"></span><strong>${v6Escape(text)}</strong>`;
+}
+
+async function v6EnableNotifications(){
+  if(!("Notification" in window)){
+    showToast("Notifications are not supported here");
+    v6NotificationStatus();
+    return;
+  }
+  try{
+    const p=await Notification.requestPermission();
+    if(p==="granted"){
+      try{
+        new Notification("ROUND ONE",{
+          body:"Notifications are enabled. Your routine is ready.",
+          icon:"icon-192.png",
+          tag:"round-one-enabled"
+        });
+      }catch{}
+      showToast("Notifications enabled");
+    }else{
+      showToast(p==="denied" ? "Notifications blocked — check iPhone Settings" : "Permission not granted");
+    }
+  }catch{
+    showToast("Could not request notification permission");
+  }
+  v6NotificationStatus();
+}
+
+document.getElementById("enableNotificationsFinal")?.addEventListener("click",v6EnableNotifications);
+document.getElementById("refreshWeekBtn")?.addEventListener("click",()=>{v6WeekRender();showToast("Weekly dashboard refreshed")});
+
+v6ReminderRender();
+v6WeekRender();
+v6NotificationStatus();
+
+const finalSections=[
+  ["weeklySection",document.querySelector('[data-target="weeklySection"]')],
+  ["remindersSection",document.querySelector('[data-target="remindersSection"]')]
+].filter(([,el])=>el);
+if("IntersectionObserver" in window){
+  const finalObserver=new IntersectionObserver(entries=>{
+    const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+    if(!visible)return;
+    const b=document.querySelector(`[data-target="${visible.target.id}"]`);
+    if(b)document.querySelectorAll(".mobile-nav-item").forEach(x=>x.classList.toggle("active",x===b));
+  },{threshold:[.25,.5,.75]});
+  finalSections.forEach(([id])=>{const s=document.getElementById(id);if(s)finalObserver.observe(s)});
+}
+setInterval(()=>{v6WeekRender();v6NotificationStatus()},60000);

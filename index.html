@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ROUND ONE — Daily Discipline Tracker</title>
 <meta name="description" content="A boxer's daily routine: water, herbs, study, boxing and rest — tracked, timed, reminded.">
-<meta name="theme-color" content="#14140f">
+<meta name="theme-color" content="#0a1014">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -148,6 +148,48 @@
 <div class="custom-task-form"><h3>Add a custom task</h3><div class="custom-task-grid"><input id="customTaskTime" type="time" aria-label="Task time"><input id="customTaskTitle" type="text" maxlength="60" placeholder="e.g. Python practice" aria-label="Task title"><button id="addCustomTaskBtn" class="btn-primary" type="button">+ Add</button></div></div>
 </section>
 
+
+<section id="weeklySection" class="panel weekly-panel">
+  <div class="panel-head">
+    <div>
+      <h2 class="panel-title">Weekly Dashboard <span class="panel-title-sub">— last 7 days</span></h2>
+      <p class="section-note">Your consistency, hydration, study and training at a glance.</p>
+    </div>
+    <button id="refreshWeekBtn" class="btn-secondary" type="button">Refresh</button>
+  </div>
+  <div class="week-hero">
+    <div class="week-score">
+      <span class="week-score-label">WEEK SCORE</span>
+      <strong id="weekScore">0%</strong>
+      <span id="weekMessage">Start strong.</span>
+    </div>
+    <div class="week-streak">
+      <span>🔥 CURRENT STREAK</span>
+      <strong id="weekStreak">0 days</strong>
+    </div>
+  </div>
+  <div class="week-stats">
+    <div><span>💧 Water</span><strong id="weekWater">0.0 L</strong></div>
+    <div><span>📚 Study</span><strong id="weekStudy">0 blocks</strong></div>
+    <div><span>🥊 Boxing</span><strong id="weekBoxing">0 sessions</strong></div>
+    <div><span>✅ Tasks</span><strong id="weekTasks">0%</strong></div>
+  </div>
+  <div id="weekChart" class="week-chart" aria-label="Seven day progress chart"></div>
+</section>
+
+<section id="remindersSection" class="panel reminders-panel">
+  <div class="panel-head">
+    <div>
+      <h2 class="panel-title">Smart Reminders <span class="panel-title-sub">— your daily alerts</span></h2>
+      <p class="section-note">In-app alarms work while ROUND ONE is open. iPhone push notifications require browser permission and a push service.</p>
+    </div>
+    <button id="enableNotificationsFinal" class="btn-primary" type="button">Enable iPhone Notifications</button>
+  </div>
+  <div class="notification-status" id="notificationStatus">
+    <span class="status-dot"></span><strong>Checking notification permission…</strong>
+  </div>
+  <div id="reminderList" class="reminder-list"></div>
+</section>
 <section id="progressSection" class="panel progress-panel">
         <div class="panel-head">
           <h2 class="panel-title">Progress <span class="panel-title-sub">— quick view</span></h2>
@@ -179,7 +221,7 @@
   </div>
 </main>
 
-<div class="app-version">ROUND ONE • iPhone PWA v4</div>
+<div class="app-version">ROUND ONE • FINAL v6</div>
 
 <footer class="foot">
   <p>Runs fully in this browser — install it to your home screen (mobile) or as an app (desktop) for the full experience. No account, no server, your data stays on this device.</p>
@@ -206,6 +248,14 @@
   <button class="mobile-nav-item" data-target="progressSection" aria-label="Progress">
     <span class="mobile-nav-icon">↗</span>
     <span>Progress</span>
+  </button>
+  <button class="mobile-nav-item" data-target="weeklySection" aria-label="Weekly">
+    <span class="mobile-nav-icon">▦</span>
+    <span>Week</span>
+  </button>
+  <button class="mobile-nav-item" data-target="remindersSection" aria-label="Reminders">
+    <span class="mobile-nav-icon">🔔</span>
+    <span>Alerts</span>
   </button>
 </nav>
 

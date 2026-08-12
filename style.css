@@ -769,3 +769,232 @@ body:before{
   .focus-card{padding:12px}
   .focus-card>span{width:34px;height:34px}
 }
+
+/* ==========================================================
+   ROUND ONE FINAL v6 — ACTIVE / MODERN VISUAL SYSTEM
+   No brown palette: deep graphite + electric cyan + lime.
+========================================================== */
+:root{
+  --ink:#070b0e;
+  --ink-2:#0c1318;
+  --paper:#edf7f5;
+  --paper-dim:#8fa6a9;
+  --gold:#49e6d1;
+  --gold-soft:#8ff7e8;
+  --red:#ff5d6c;
+  --green:#a7f34b;
+  --line:rgba(237,247,245,.10);
+  --electric:rgba(73,230,209,.16);
+  --shadow:0 22px 65px rgba(0,0,0,.42);
+}
+
+body{
+  background:
+    radial-gradient(circle at 12% 2%,rgba(73,230,209,.12),transparent 27%),
+    radial-gradient(circle at 88% 28%,rgba(167,243,75,.08),transparent 23%),
+    linear-gradient(180deg,#060a0d 0%,#0a1115 52%,#070b0e 100%);
+  color:var(--paper);
+}
+
+body:before{
+  opacity:.025;
+  background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+
+.topbar{
+  background:rgba(6,10,13,.82)!important;
+  border-bottom:1px solid rgba(73,230,209,.18)!important;
+}
+
+.hero-dashboard{
+  background:
+    radial-gradient(circle at 78% 48%,rgba(73,230,209,.16),transparent 24%),
+    linear-gradient(135deg,rgba(73,230,209,.10),transparent 48%),
+    rgba(255,255,255,.018);
+  border-color:rgba(73,230,209,.20);
+}
+.hero-kicker{color:var(--gold)}
+.hero-copy h1 span{color:var(--gold)}
+.hero-ring{
+  background:radial-gradient(circle at center,#0d1418 61%,transparent 62%),
+             conic-gradient(var(--gold) 0deg,rgba(73,230,209,.10) 0deg);
+  box-shadow:0 0 0 1px rgba(73,230,209,.22),0 0 55px rgba(73,230,209,.12);
+}
+.hero-ring-inner strong{color:var(--gold-soft)}
+
+.focus-card{
+  background:linear-gradient(145deg,rgba(73,230,209,.045),rgba(255,255,255,.012));
+}
+.focus-card>span{
+  background:rgba(73,230,209,.10);
+}
+
+.panel,.round-card{
+  background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012))!important;
+}
+.panel:hover,.round-card:hover{
+  border-color:rgba(73,230,209,.20)!important;
+}
+.btn-primary{
+  background:linear-gradient(135deg,#49e6d1,#2bc4b0)!important;
+  color:#041012!important;
+}
+.btn-secondary:hover,.icon-btn:hover{
+  border-color:rgba(73,230,209,.40)!important;
+}
+.timeline .task.is-now{
+  border-color:rgba(73,230,209,.45)!important;
+  box-shadow:0 0 0 1px rgba(73,230,209,.08),0 10px 32px rgba(0,0,0,.18);
+}
+.round-progressbar-fill,.mini-track span{
+  background:linear-gradient(90deg,#49e6d1,#a7f34b)!important;
+}
+.water-jug-fill{
+  background:linear-gradient(180deg,#49e6d1,#159bb0)!important;
+}
+.weekly-panel,.reminders-panel{
+  scroll-margin-top:90px;
+}
+.section-note{
+  margin:4px 0 0;
+  color:var(--paper-dim);
+  font-size:11px;
+  max-width:620px;
+}
+.week-hero{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:18px;
+  padding:18px;
+  border-radius:18px;
+  border:1px solid rgba(73,230,209,.16);
+  background:linear-gradient(135deg,rgba(73,230,209,.08),rgba(167,243,75,.035));
+}
+.week-score-label,.week-streak span{
+  display:block;
+  font-family:var(--font-mono);
+  font-size:9px;
+  letter-spacing:.18em;
+  color:var(--paper-dim);
+}
+.week-score strong{
+  display:block;
+  font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+  font-size:56px;
+  line-height:1;
+  color:var(--gold);
+  margin:4px 0;
+}
+.week-score span:last-child{font-size:12px;color:var(--paper-dim)}
+.week-streak{
+  text-align:right;
+}
+.week-streak strong{
+  display:block;
+  margin-top:5px;
+  font-size:22px;
+  color:var(--green);
+}
+.week-stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+  margin:12px 0;
+}
+.week-stats div{
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:rgba(255,255,255,.018);
+}
+.week-stats span{display:block;color:var(--paper-dim);font-size:10px}
+.week-stats strong{display:block;margin-top:5px;font-size:17px}
+.week-chart{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
+  align-items:end;
+  min-height:150px;
+  padding:14px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.12);
+}
+.day-bar{
+  height:120px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  gap:6px;
+}
+.day-bar-track{
+  width:100%;
+  max-width:34px;
+  height:95px;
+  display:flex;
+  align-items:flex-end;
+  border-radius:8px;
+  background:rgba(255,255,255,.05);
+  overflow:hidden;
+}
+.day-bar-fill{
+  width:100%;
+  border-radius:8px 8px 0 0;
+  background:linear-gradient(180deg,#49e6d1,#a7f34b);
+  min-height:3px;
+}
+.day-bar small{font-family:var(--font-mono);font-size:8px;color:var(--paper-dim)}
+.day-bar b{font-size:9px;color:var(--paper)}
+.notification-status{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:8px 0 12px;
+  padding:11px 13px;
+  border-radius:12px;
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--line);
+  font-size:11px;
+}
+.status-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:var(--paper-dim);
+  box-shadow:0 0 0 4px rgba(255,255,255,.03);
+}
+.status-dot.ok{background:var(--green);box-shadow:0 0 0 4px rgba(167,243,75,.10)}
+.status-dot.warn{background:var(--red);box-shadow:0 0 0 4px rgba(255,93,108,.10)}
+.reminder-list{display:grid;gap:8px}
+.reminder-row{
+  display:grid;
+  grid-template-columns:65px 1fr auto;
+  gap:10px;
+  align-items:center;
+  padding:11px 12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:rgba(255,255,255,.018);
+}
+.reminder-time{font-family:var(--font-mono);color:var(--gold);font-size:11px;font-weight:700}
+.reminder-title{font-weight:700;font-size:13px}
+.reminder-meta{display:block;margin-top:2px;color:var(--paper-dim);font-size:10px}
+.reminder-toggle{
+  width:44px;height:26px;border-radius:99px;border:0;
+  background:#253137;position:relative;cursor:pointer;
+}
+.reminder-toggle:after{
+  content:"";position:absolute;top:4px;left:4px;width:18px;height:18px;
+  border-radius:50%;background:#9aa7aa;transition:.2s;
+}
+.reminder-toggle.on{background:rgba(73,230,209,.30)}
+.reminder-toggle.on:after{left:22px;background:var(--gold)}
+@media(max-width:720px){
+  .week-hero{align-items:flex-start}
+  .week-score strong{font-size:48px}
+  .week-stats{grid-template-columns:repeat(2,1fr)}
+  .reminder-row{grid-template-columns:58px 1fr auto}
+  .week-chart{gap:5px}
+}
