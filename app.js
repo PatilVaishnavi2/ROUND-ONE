@@ -59,6 +59,7 @@ function saveDayState() { localStorage.setItem(todayKey(), JSON.stringify(state)
 
 let settings = loadSettings();
 let state = loadDayState();
+let currentDayKey = todayKey();
 
 /* ---------- 3. DOM ---------- */
 const $ = (sel) => document.querySelector(sel);
@@ -443,8 +444,6 @@ setInterval(() => {
     render();
   }
 }, 20000);
-let currentDayKey = todayKey();
-
 /* ---------- 9. TOAST ---------- */
 let toastTimer = null;
 function showToast(msg) {

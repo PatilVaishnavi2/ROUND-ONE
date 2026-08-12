@@ -1,6 +1,6 @@
 {
   "name": "round-one",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "private": true,
   "description": "ROUND ONE \u2014 cross-platform daily discipline tracker",
   "main": "electron/main.cjs",
