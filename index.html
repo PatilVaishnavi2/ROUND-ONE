@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ROUND ONE — Daily Discipline Tracker</title>
+<meta name="description" content="A boxer's daily routine: water, herbs, study, boxing and rest — tracked, timed, reminded.">
+<meta name="theme-color" content="#14140f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Round One">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@500;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="corner-tape tape-tl"></div>
+<div class="corner-tape tape-tr"></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-eyebrow">TRAINING CAMP</span>
+      <h1 class="brand-title">ROUND ONE</h1>
+    </div>
+    <div class="topbar-actions">
+      <button id="soundToggle" class="icon-btn" aria-pressed="true" title="Turn reminders on/off">
+        <span class="icon-btn-dot"></span>
+        <span class="icon-btn-label" id="soundToggleLabel">Bell ON</span>
+      </button>
+      <button id="notifyBtn" class="icon-btn" title="Enable notifications">🔔 <span id="notifyLabel">Notify</span></button>
+      <button id="installBtn" class="icon-btn" title="Install Round One" hidden>＋ Install</button>
+      <button id="resetBtn" class="icon-btn ghost" title="Reset today's tasks">Reset day</button>
+    </div>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- SIGNATURE: the round stamp -->
+  <section id="homeSection" class="round-card" aria-live="polite">
+    <div class="round-stamp">
+      <span class="round-stamp-pct" id="progressPct">0%</span>
+      <span class="round-stamp-sub">DONE</span>
+    </div>
+    <div class="round-info">
+      <span class="round-info-eyebrow" id="nowLabel">RIGHT NOW</span>
+      <h2 class="round-info-task" id="nowTask">Loading today's card…</h2>
+      <p class="round-info-meta" id="nowMeta">—</p>
+      <div class="round-progressbar">
+        <div class="round-progressbar-fill" id="progressFill"></div>
+      </div>
+      <p class="round-info-date" id="todayDate">—</p>
+    </div>
+  </section>
+
+  <section class="quick-stats" aria-label="Today's quick stats">
+    <div class="stat-card"><span class="stat-value" id="statTasks">0/0</span><span class="stat-label">Tasks</span></div>
+    <div class="stat-card"><span class="stat-value" id="statWater">0%</span><span class="stat-label">Water</span></div>
+    <div class="stat-card"><span class="stat-value" id="statStudy">0h</span><span class="stat-label">Study blocks</span></div>
+    <div class="stat-card"><span class="stat-value" id="statStreak">0</span><span class="stat-label">Day streak</span></div>
+  </section>
+
+  <div class="two-col">
+
+    <!-- TIMELINE -->
+    <section id="routineSection" class="panel timeline-panel">
+      <div class="panel-head">
+        <h2 class="panel-title">The Card <span class="panel-title-sub">— today's schedule</span></h2>
+      </div>
+      <ol class="timeline" id="timeline"><!-- injected --></ol>
+
+      <form id="addTaskForm" class="add-task">
+        <p class="add-task-label">Add something to tomorrow's plan</p>
+        <div class="add-task-row">
+          <input type="time" id="addTaskTime" required aria-label="Time">
+          <input type="text" id="addTaskName" placeholder="Task name" required maxlength="60" aria-label="Task name">
+          <button type="submit" class="btn-add">+ Add</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <section id="waterSection" class="panel water-panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Water <span class="panel-title-sub">— 3.0 L target</span></h2>
+        </div>
+        <div class="water-visual">
+          <div class="water-jug">
+            <div class="water-jug-fill" id="waterFill"></div>
+            <div class="water-jug-mark" style="bottom:33%"></div>
+            <div class="water-jug-mark" style="bottom:66%"></div>
+          </div>
+          <div class="water-readout">
+            <span class="water-amount" id="waterAmount">0</span>
+            <span class="water-unit">ml / 3000 ml</span>
+          </div>
+        </div>
+        <div class="water-buttons">
+          <button class="btn-water" data-ml="250">+250 ml</button>
+          <button class="btn-water" data-ml="300">+300 ml</button>
+          <button class="btn-water" data-ml="500">+500 ml</button>
+          <button class="btn-water minus" data-ml="-250">−250 ml</button>
+        </div>
+      </section>
+
+      <section class="panel herbs-panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Herb Log <span class="panel-title-sub">— today</span></h2>
+        </div>
+        <ul class="herb-list" id="herbList"><!-- injected --></ul>
+      </section>
+
+      <section id="progressSection" class="panel progress-panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Progress <span class="panel-title-sub">— quick view</span></h2>
+        </div>
+        <div class="mini-progress-list">
+          <div><span>Tasks</span><strong id="progressTasksText">0%</strong></div>
+          <div class="mini-track"><span id="progressTasksBar"></span></div>
+          <div><span>Water</span><strong id="progressWaterText">0%</strong></div>
+          <div class="mini-track"><span id="progressWaterBar"></span></div>
+        </div>
+      </section>
+
+      <section class="panel legend-panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Legend</h2>
+        </div>
+        <ul class="legend-list">
+          <li><span class="dot dot-water"></span> Water</li>
+          <li><span class="dot dot-herb"></span> Herb / diet</li>
+          <li><span class="dot dot-box"></span> Boxing</li>
+          <li><span class="dot dot-study"></span> Study</li>
+          <li><span class="dot dot-rest"></span> Rest</li>
+          <li><span class="dot dot-meal"></span> Meal</li>
+          <li><span class="dot dot-custom"></span> Your own task</li>
+        </ul>
+      </section>
+
+    </aside>
+  </div>
+</main>
+
+<div class="app-version">ROUND ONE • iPhone PWA v3</div>
+
+<footer class="foot">
+  <p>Runs fully in this browser — install it to your home screen (mobile) or as an app (desktop) for the full experience. No account, no server, your data stays on this device.</p>
+</footer>
+
+
+<!-- iPhone-style bottom navigation -->
+<nav class="mobile-nav" aria-label="ROUND ONE navigation">
+  <button class="mobile-nav-item active" data-target="homeSection" aria-label="Home">
+    <span class="mobile-nav-icon">⌂</span>
+    <span>Home</span>
+  </button>
+  <button class="mobile-nav-item" data-target="routineSection" aria-label="Routine">
+    <span class="mobile-nav-icon">☷</span>
+    <span>Routine</span>
+  </button>
+  <button class="mobile-nav-item" data-target="waterSection" aria-label="Water">
+    <span class="mobile-nav-icon">💧</span>
+    <span>Water</span>
+  </button>
+  <button class="mobile-nav-item" data-target="progressSection" aria-label="Progress">
+    <span class="mobile-nav-icon">↗</span>
+    <span>Progress</span>
+  </button>
+</nav>
+
+<!-- ALARM OVERLAY -->
+<div id="alarmBar" class="alarm-bar" hidden>
+  <div class="alarm-bar-inner">
+    <div class="alarm-bell">🔔</div>
+    <div class="alarm-text">
+      <strong id="alarmTitle">Time for: —</strong>
+      <span id="alarmSub">Ringing…</span>
+    </div>
+    <div class="alarm-actions">
+      <button id="alarmDone" class="btn-add">✓ Mark done</button>
+      <button id="alarmStop" class="icon-btn ghost">Stop ringing</button>
+    </div>
+  </div>
+</div>
+
+<div id="installHelp" class="modal" hidden aria-modal="true" role="dialog" aria-labelledby="installHelpTitle">
+  <div class="modal-card">
+    <button id="installHelpClose" class="modal-close" aria-label="Close">×</button>
+    <span class="brand-eyebrow">IPHONE 16</span>
+    <h2 id="installHelpTitle">Install ROUND ONE</h2>
+    <p>In Safari, open your ROUND ONE link, tap <strong>Share</strong> → <strong>Add to Home Screen</strong>, turn on <strong>Open as Web App</strong>, then tap <strong>Add</strong>.</p>
+    <p class="modal-note">For offline use, open the app once while online before leaving Wi‑Fi. Notifications are supported by iOS for installed web apps, but exact reminder behavior depends on iOS permissions and web-push setup.</p>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

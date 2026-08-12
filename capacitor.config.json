@@ -1,0 +1,8 @@
+{
+  "appId": "com.roundone.discipline",
+  "appName": "ROUND ONE",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
