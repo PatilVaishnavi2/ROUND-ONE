@@ -1,0 +1,17 @@
+{
+  "name": "ROUND ONE — Daily Discipline Tracker",
+  "short_name": "Round One",
+  "description": "Water, herbs, boxing, study and rest — timed, ticked and reminded, every day.",
+  "id": "./round-one",
+  "start_url": "./index.html",
+  "scope": "./",
+  "lang": "en-IN",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#14140f",
+  "theme_color": "#14140f",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
